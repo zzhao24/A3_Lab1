@@ -30,6 +30,43 @@ replayVideo() {
   overlay.querySelector('i').addEventListener('click', video.replayVideo);
 },
 
+fetchVideoThumbs() {
+  const url = './includes/functions.php?getVideos=true';
+  fetch()
+  .then((resp) => resp.json())
+  .then((data) => {video.loadVideoThumbs(data); })
+  .catch(function(error) {
+    console.log(error);
+  });
+},
+
+loadVideoThumbs(data) {
+  let thumbHolder = document.querySelector('video-thumbs');
+
+  data.forEach(thumb => {
+    let docFrag =
+    `<li class="vid-thumb" role="button" data-videopath="$(thumb.path)">
+    <img src="images/$thumb(placebolder)" alt="mini commercial" class="responsive">
+    </li>`;
+    
+
+      thumbHolder.innerHTML += docFrag;
+  });
+
+  thumbHolder,querySelectorAll('li').forEach((thumb) => thumb.addEventListener('click', video.loadNewVideo));
+},
+
+loadNewVideo() {
+  let videoPath = "video/" + this.dataset.videopath;
+  video.videoPlayer.src = videoPath;
+  video.videoPlayer.load();
+  video.videoPlayer.play();
+
+  let overlay = document.querySelector('.vid-overlay');
+  overlay.classList.remove('show-overlay');
+
+  video.volOn();
+},
   //then functionality
   init() {
     console.log('video module added');
